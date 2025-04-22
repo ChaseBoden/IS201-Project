@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Video Game Character</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        .game-box {
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 80%;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .choices {
+            margin-top: 20px;
+        }
+
+        .choice-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .choice-btn:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        #score {
+            font-size: 1.5em;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Guess the Video Game Character!</h1>
+    <div class="game-box">
+        <p id="hint">Loading...</p>
+        <div class="choices">
+            <button class="choice-btn" id="choice1">Choice 1</button>
+            <button class="choice-btn" id="choice2">Choice 2</button>
+            <button class="choice-btn" id="choice3">Choice 3</button>
+            <button class="choice-btn" id="choice4">Choice 4</button>
+        </div>
+
+        <div id="result"></div>
+        <div id="score"></div>
+    </div>
+
+    <script>
+        // Game data: characters and hints
+        const characters = [
+            { name: 'Mario', hint: 'This character is a plumber who saves Princess Peach.', options: ['Mario', 'Luigi', 'Bowser', 'Toad'], correct: 'Mario' },
+            { name: 'Link', hint: 'This character is a young hero who wears a green tunic.', options: ['Zelda', 'Link', 'Ganon', 'Impa'], correct: 'Link' },
+            { name: 'Samus', hint: 'This bounty hunter is known for her power suit and helmet.', options: ['Samus', 'Ridley', 'Zero Suit Samus', 'Mother Brain'], correct: 'Samus' },
+            { name: 'Pikachu', hint: 'This yellow electric-type Pokémon is Ash’s best friend.', options: ['Pikachu', 'Eevee', 'Charizard', 'Bulbasaur'], correct: 'Pikachu' },
+            { name: 'Sonic', hint: 'This blue hedgehog is known for his incredible speed.', options: ['Tails', 'Sonic', 'Knuckles', 'Dr. Robotnik'], correct: 'Sonic' },
+            { name: 'Master Chief', hint: 'This super soldier is the protagonist of the Halo series.', options: ['Cortana', 'Master Chief', 'Arbiter', 'Grunt'], correct: 'Master Chief' }
+        ];
+
+        let score = 0;
+        let currentCharacterIndex = 0;
+
+        // Shuffle function to randomize character order
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+            }
+        }
+
+        // Load the next character and their question
+        function loadCharacter() {
+            const currentCharacter = characters[currentCharacterIndex];
+            document.getElementById('hint').innerText = currentCharacter.hint;
+
+            // Shuffle the options so that the correct answer isn't always in the same spot
+            shuffleArray(currentCharacter.options);
+
+            // Set choices to buttons
+            document.getElementById('choice1').innerText = currentCharacter.options[0];
+            document.getElementById('choice2').innerText = currentCharacter.options[1];
+            document.getElementById('choice3').innerText = currentCharacter.options[2];
+            document.getElementById('choice4').innerText = currentCharacter.options[3];
+
+            // Attach event listeners to buttons
+            document.getElementById('choice1').onclick = () => checkAnswer(currentCharacter.options[0]);
+            document.getElementById('choice2').onclick = () => checkAnswer(currentCharacter.options[1]);
+            document.getElementById('choice3').onclick = () => checkAnswer(currentCharacter.options[2]);
+            document.getElementById('choice4').onclick = () => checkAnswer(currentCharacter.options[3]);
+        }
+
+        // Check the user's answer
+        function checkAnswer(selected) {
+            const currentCharacter = characters[currentCharacterIndex];
+            if (selected === currentCharacter.correct) {
+                score++;
+                document.getElementById('result').innerText = "Correct!";
+            } else {
+                document.getElementById('result').innerText = "Incorrect. The correct answer was " + currentCharacter.correct + ".";
+            }
+
+            // Update score
+            document.getElementById('score').innerText = "Score: " + score;
+
+            // Move to next question
+            currentCharacterIndex++;
+            if (currentCharacterIndex < characters.length) {
+                setTimeout(loadCharacter, 2000); // Load next question after 2 seconds
+            } else {
+                document.getElementById('result').innerText = "Game Over! Final Score: " + score;
+            }
+        }
+
+        // Initialize game
+        loadCharacter();
+    </script>
+</body>
+</html>
